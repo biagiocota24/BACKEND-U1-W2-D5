@@ -64,6 +64,7 @@ public class Main {
         boolean azioneValida = false;
         int azione = -1;
         while (azione != 0) {
+            azioneValida = false;
             do {
                 System.out.println("Quale Azione vuoi eseguire ?");
                 System.out.println("(1)AGGIUNGI | (2)RICERCA CON ID | (3)FILTRA PER PREZZO | (4)FILTRA PER NUMERO | (5)RIMUOVERE ELEMENTO CON ID | (6) AGGIORNAENTO ELEMENTO TRAMITE ID | (7)STAMPA DELLA STATISTICHE DELLA COLLEZIONE");
@@ -204,29 +205,69 @@ public class Main {
                     }
                 }
                 case 2 -> {
-                    System.out.println("Insersci il gameId ");
-                    long gameId = Long.parseLong(scanner.nextLine());
+                    long gameId = 0;
+                    boolean idValido = false;
+                    do {
+                        try {
+                            System.out.println("Insersci il gameId ");
+                            gameId = Long.parseLong(scanner.nextLine());
+                            idValido = true;
+                        } catch (NumberFormatException e) {
+                            System.err.println(e.getMessage());
+                        }
+                    } while (!idValido);
                     Gioco giocoCercato = listaGiochi.cercaPerId(gameId);
                     if (giocoCercato != null) System.out.println("Trovato : " + giocoCercato);
                     else System.out.println("nessun gioco corrispondente all'Id !");
                 }
                 case 3 -> {
-                    System.out.println("Inserisci il prezzo massimo ");
-                    double maxPrice = Double.parseDouble(scanner.nextLine());
+                    double maxPrice = 0;
+                    boolean maxPriceValido = false;
+                    do {
+                        try {
+                            System.out.println("Inserisci il prezzo massimo ");
+                            maxPrice = Double.parseDouble(scanner.nextLine());
+                            maxPriceValido = true;
+                        } catch (NumberFormatException e) {
+                            System.err.println(e.getMessage());
+                        }
+                    } while (!maxPriceValido);
                     List<Gioco> listaFiltrata = listaGiochi.filtraPerPrezzo(maxPrice);
-                    System.out.println("Ecco la lista filtrata :");
-                    listaFiltrata.forEach(gioco -> System.out.println(gioco));
+                    if (!listaFiltrata.isEmpty()) {
+                        System.out.println("Ecco la lista filtrata :");
+                        listaFiltrata.forEach(gioco -> System.out.println(gioco));
+                    } else System.out.println("Nessun gioco trovato !");
                 }
                 case 4 -> {
-                    System.out.println("Inserisci il numero di giocatori desiderato ");
-                    int numGiocatori = Integer.parseInt(scanner.nextLine());
+                    int numGiocatori = 0;
+                    boolean numGiocatoriValido = false;
+                    do {
+                        try {
+                            System.out.println("Inserisci il numero di giocatori desiderato ");
+                            numGiocatori = Integer.parseInt(scanner.nextLine());
+                            numGiocatoriValido = true;
+                        } catch (NumberFormatException e) {
+                            System.err.println(e.getMessage());
+                        }
+                    } while (!numGiocatoriValido);
                     List<Gioco> listaFiltrata = listaGiochi.cercaPerNumGiocatori(numGiocatori);
-                    System.out.println("Ecco la lista filtrata :");
-                    listaFiltrata.forEach(gioco -> System.out.println(gioco));
+                    if (!listaFiltrata.isEmpty()) {
+                        System.out.println("Ecco la lista filtrata :");
+                        listaFiltrata.forEach(gioco -> System.out.println(gioco));
+                    } else System.out.println("Nessun gioco trovato !");
                 }
                 case 5 -> {
-                    System.out.println("Inserisci il codice id del gioco che vuoi rimuovere");
-                    long id = Long.parseLong(scanner.nextLine());
+                    long id = 0;
+                    boolean idValido = false;
+                    do {
+                        try {
+                            System.out.println("Inserisci il codice id del gioco che vuoi rimuovere");
+                            id = Long.parseLong(scanner.nextLine());
+                            idValido = true;
+                        } catch (NumberFormatException e) {
+                            System.err.println(e.getMessage());
+                        }
+                    } while (!idValido);
                     Gioco giocoRimosso = listaGiochi.cercaPerId(id);
                     if (giocoRimosso != null) {
                         listaGiochi.removeWithGameId(id);
@@ -236,15 +277,21 @@ public class Main {
                     }
                 }
                 case 6 -> {
-                    System.out.println("Inserisci il codice id del gioco che vuoi modificare ");
-                    long id = Long.parseLong(scanner.nextLine());
+                    long id = 0;
+                    boolean idValido = false;
+                    do {
+                        try {
+                            System.out.println("Inserisci il codice id del gioco che vuoi modificare ");
+                            id = Long.parseLong(scanner.nextLine());
+                            idValido = true;
+                        } catch (NumberFormatException e) {
+                            System.err.println(e.getMessage());
+                        }
+                    } while (!idValido);
                     listaGiochi.customGame(id);
                 }
                 case 7 -> listaGiochi.stampaStatistiche();
             }
         }
-
-
     }
 }
-

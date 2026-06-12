@@ -66,6 +66,7 @@ public class Collection {
 
     public void customGame(long gameId) {
         Scanner scanner = new Scanner(System.in);
+
         Gioco gameToCustom = cercaPerId(gameId);
         if (gameToCustom != null) {
 
