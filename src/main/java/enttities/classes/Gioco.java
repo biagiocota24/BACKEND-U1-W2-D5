@@ -30,6 +30,18 @@ public abstract class Gioco {
         return price;
     }
 
+    public void setPrice(double price) {
+        if (price > 5){
+        this.price = price;
+        }else {
+            System.out.println("Prezzo non valido !");
+        }
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
     @Override
     public String toString() {
         return "Gioco{" +

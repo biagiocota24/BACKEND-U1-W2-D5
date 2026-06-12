@@ -1,6 +1,10 @@
 package enttities.classes;
 
+import enums.Piattaforme;
+
+import java.util.Comparator;
 import java.util.List;
+import java.util.Scanner;
 import java.util.Set;
 
 public class Collection {
@@ -61,13 +65,108 @@ public class Collection {
     // AGGIORNARE UN ELEMENTO ESISTENTE
 
     public void customGame(long gameId) {
+        Scanner scanner = new Scanner(System.in);
         Gioco gameToCustom = cercaPerId(gameId);
         if (gameToCustom != null) {
-            if (gameToCustom instanceof Videogioco){}
-            if (gameToCustom instanceof GiocoDaTavola){}
+
+            String nuovoTitolo;
+            do {
+                System.out.println("Imposta il nuovo nome ");
+                nuovoTitolo = scanner.nextLine();
+                if (nuovoTitolo.isEmpty()) System.err.println("Il titolo non puo essere vuoto !");
+            } while (nuovoTitolo.isEmpty());
+            gameToCustom.setTitle(nuovoTitolo);
+
+
+            boolean prezzoValido = false;
+            double nuovoPrezzo = 0;
+            do {
+                System.out.println("Imposta il nuovo prezzo ");
+                try {
+                    nuovoPrezzo = Double.parseDouble(scanner.nextLine());
+                    gameToCustom.setPrice(nuovoPrezzo);
+                    prezzoValido = true;
+                } catch (NumberFormatException e) {
+                    System.err.println("Prezzo non valido !");
+                }
+            } while (!prezzoValido);
+
+            if (gameToCustom instanceof Videogioco) {
+
+                Piattaforme piattaforma = null;
+                boolean piattaformaValida = false;
+                do {
+                    System.out.println("Imposta la piattaforma ");
+                    try {
+                        piattaforma = Piattaforme.valueOf(scanner.nextLine().toUpperCase());
+                        ((Videogioco) gameToCustom).setPiattaforma(piattaforma);
+                        piattaformaValida = true;
+                    } catch (IllegalArgumentException e) {
+                        System.out.println("Piattaforma non disponibile !");
+                    }
+                } while (!piattaformaValida);
+
+                int nuovaDurata = 0;
+                boolean durataValida = false;
+                do {
+                    System.out.println("Imposta la durata del gioco");
+                    try {
+                        nuovaDurata = Integer.parseInt(scanner.nextLine());
+                        ((Videogioco) gameToCustom).setDurataGioco(nuovaDurata);
+                        durataValida = true;
+                    } catch (NumberFormatException e) {
+                        System.out.println("Durata non valida , inserisci un numero");
+                    }
+                } while (!durataValida);
+            }
+
+            if (gameToCustom instanceof GiocoDaTavola) {
+
+                boolean numGiocValido = false;
+                int nuovoNumeroGioc = 0;
+                do {
+                    System.out.println("Inserisci un numero di giocatori valido (min.2 - max.10)");
+                    try {
+                        nuovoNumeroGioc = Integer.parseInt(scanner.nextLine());
+                        ((GiocoDaTavola) gameToCustom).setNumGiocatori(nuovoNumeroGioc);
+                        numGiocValido = true;
+                    } catch (NumberFormatException e) {
+                        System.err.println("numero giocatori non valido !");
+                    }
+
+                } while (!numGiocValido);
+
+
+                int nuovaDurata = 0;
+                boolean durataValida = false;
+                do {
+                    System.out.println("inserisci la nuova durata in minuti");
+                    try {
+                        nuovaDurata = Integer.parseInt(scanner.nextLine());
+                        ((GiocoDaTavola) gameToCustom).setMinutiDurataMedia(nuovaDurata);
+                        durataValida = true;
+                    } catch (NumberFormatException e) {
+                        System.err.println("Durata non valida !");
+                    }
+                } while (!durataValida);
+            }
+
+            System.out.println("OK --- Gioco aggiornato");
         } else {
             System.out.println("Nessun gioco corrispondente a questo id !");
         }
+    }
+
+    public void stampaStatistiche() {
+        System.out.println("Giochi presenti in lista : " + listaGiochi.size());
+        int nVideoGiochi = listaGiochi.stream().filter(gioco -> gioco instanceof Videogioco).toList().size();
+        System.out.println("Videogiochi in lista : " + nVideoGiochi);
+        int nGiochiDatavola = listaGiochi.stream().filter(gioco -> gioco instanceof GiocoDaTavola).toList().size();
+        System.out.println("Gochi da tavolo in lista : " + nGiochiDatavola);
+        Gioco giocoPiuCostoso = listaGiochi.stream().max(Comparator.comparingDouble(gioco -> gioco.getPrice())).orElse(null);
+        System.out.println("Gioco piu costoso : " + giocoPiuCostoso.getTitle() + " " + giocoPiuCostoso.getPrice() + "€");
+        double prezzoMedio = listaGiochi.stream().mapToDouble(gioco -> gioco.getPrice()).average().orElse(0);
+        System.out.println("Perzzo medio dei giochi : " + prezzoMedio + "€");
     }
 
     @Override
@@ -76,4 +175,5 @@ public class Collection {
                 "listaGiochi=" + listaGiochi +
                 '}';
     }
+
 }

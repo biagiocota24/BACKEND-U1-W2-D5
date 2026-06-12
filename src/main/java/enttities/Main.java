@@ -7,10 +7,7 @@ import enttities.classes.Videogioco;
 import enums.Generi;
 import enums.Piattaforme;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class Main {
     public static void main(String[] args) {
@@ -31,16 +28,16 @@ public class Main {
 
         Set<Gioco> lista = new HashSet<>();
         Collection listaGiochi = new Collection(lista);
-        listaGiochi.addToCollection(videoGame1);
         listaGiochi.addToCollection(giocoT1);
-        listaGiochi.addToCollection(videoGame2);
-        listaGiochi.addToCollection(giocoT3);
-        listaGiochi.addToCollection(videoGame5);
         listaGiochi.addToCollection(giocoT2);
-        listaGiochi.addToCollection(videoGame3);
-        listaGiochi.addToCollection(giocoT5);
+        listaGiochi.addToCollection(giocoT3);
         listaGiochi.addToCollection(giocoT4);
+        listaGiochi.addToCollection(giocoT5);
+        listaGiochi.addToCollection(videoGame1);
+        listaGiochi.addToCollection(videoGame2);
+        listaGiochi.addToCollection(videoGame3);
         listaGiochi.addToCollection(videoGame4);
+        listaGiochi.addToCollection(videoGame5);
 
 //        listaGiochi.getListaGiochi().stream().forEach(gioco -> System.out.println(gioco));
 
@@ -51,12 +48,19 @@ public class Main {
 //        System.out.println(listaGiochi.cercaPerNumGiocatori(6));
 
 //        listaGiochi.removeWithGameId(4);
+//
+//        listaGiochi.getListaGiochi().stream().forEach(gioco -> System.out.println(gioco));
+//
+//        listaGiochi.customGame(2);
+//
+//        listaGiochi.getListaGiochi().stream().forEach(gioco -> System.out.println(gioco));
 
-                listaGiochi.getListaGiochi().stream().forEach(gioco -> System.out.println(gioco));
+        listaGiochi.stampaStatistiche();
 
-
-
+//        Gioco giocoPiuCostoso = listaGiochi.getListaGiochi().stream().max(Comparator.comparingDouble(gioco -> gioco.getPrice())).orElse(null);
+//        System.out.println(giocoPiuCostoso);
 
 
     }
 }
+

@@ -23,6 +23,10 @@ public class GiocoDaTavola extends Gioco {
         return numGiocatori;
     }
 
+    public void setMinutiDurataMedia(int minutiDurataMedia) {
+        this.minutiDurataMedia = minutiDurataMedia;
+    }
+
     @Override
     public String toString() {
         return "GiocoDaTavola{" +
