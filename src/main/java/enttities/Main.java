@@ -6,6 +6,8 @@ import enttities.classes.GiocoDaTavola;
 import enttities.classes.Videogioco;
 import enums.Generi;
 import enums.Piattaforme;
+import exceptions.EccezionePiattaforma;
+import exceptions.NameException;
 
 import java.util.*;
 
@@ -13,21 +15,19 @@ public class Main {
     public static void main(String[] args) {
 
         Scanner scanner = new Scanner(System.in);
-
         // 5 VIDEOGIOCHI
         Videogioco videoGame1 = new Videogioco("GTA 5", 70, Piattaforme.PS5, 60, Generi.azione);
         Videogioco videoGame2 = new Videogioco("The Last of Us", 65, Piattaforme.PS5, 50, Generi.azione);
         Videogioco videoGame3 = new Videogioco("FIFA 25", 60, Piattaforme.PS5, 40, Generi.sport);
         Videogioco videoGame4 = new Videogioco("Elden Ring", 75, Piattaforme.PS5, 55, Generi.strategia);
         Videogioco videoGame5 = new Videogioco("Call of Duty", 80, Piattaforme.PS5, 70, Generi.combattimento);
-
         // 5 GIOCHI DA TAVOLA
         GiocoDaTavola giocoT1 = new GiocoDaTavola("Tombola", 10, 8, 30);
         GiocoDaTavola giocoT2 = new GiocoDaTavola("Monopoly", 25, 4, 120);
         GiocoDaTavola giocoT3 = new GiocoDaTavola("Scarabeo", 20, 4, 60);
         GiocoDaTavola giocoT4 = new GiocoDaTavola("Risiko", 35, 6, 180);
         GiocoDaTavola giocoT5 = new GiocoDaTavola("Cluedo", 22, 6, 90);
-
+        // CREO LISTA GIOCHI CON SET PER NON AVERE DUPLICATI
         Set<Gioco> lista = new HashSet<>();
         Collection listaGiochi = new Collection(lista);
         listaGiochi.addToCollection(giocoT1);
@@ -41,26 +41,19 @@ public class Main {
         listaGiochi.addToCollection(videoGame4);
         listaGiochi.addToCollection(videoGame5);
 
+        //PROVE------------------------
 //        listaGiochi.getListaGiochi().stream().forEach(gioco -> System.out.println(gioco));
-
 //        System.out.println(listaGiochi.cercaPerId(3));
-
 //        System.out.println(listaGiochi.filtraPerPrezzo(10));
-
 //        System.out.println(listaGiochi.cercaPerNumGiocatori(6));
-
 //        listaGiochi.removeWithGameId(4);
-//
 //        listaGiochi.getListaGiochi().stream().forEach(gioco -> System.out.println(gioco));
-//
 //        listaGiochi.customGame(2);
-//
 //        listaGiochi.getListaGiochi().stream().forEach(gioco -> System.out.println(gioco));
-
 //        listaGiochi.stampaStatistiche();
-
 //        Gioco giocoPiuCostoso = listaGiochi.getListaGiochi().stream().max(Comparator.comparingDouble(gioco -> gioco.getPrice())).orElse(null);
 //        System.out.println(giocoPiuCostoso);
+        //PROVE------------------------
 
 
         System.out.println("---------------TUTTI I GIOCHI-----------------");
@@ -71,7 +64,6 @@ public class Main {
         boolean azioneValida = false;
         int azione = -1;
         while (azione != 0) {
-
             do {
                 System.out.println("Quale Azione vuoi eseguire ?");
                 System.out.println("(1)AGGIUNGI | (2)RICERCA CON ID | (3)FILTRA PER PREZZO | (4)FILTRA PER NUMERO | (5)RIMUOVERE ELEMENTO CON ID | (6) AGGIORNAENTO ELEMENTO TRAMITE ID | (7)STAMPA DELLA STATISTICHE DELLA COLLEZIONE");
@@ -94,6 +86,7 @@ public class Main {
                     break;
                 }
                 case 1 -> {
+                    //
                     int tipo = 0;
                     boolean tipoValido = false;
                     do {
@@ -105,27 +98,105 @@ public class Main {
                             System.err.println("Tipo gioco non disponibile");
                         }
                     } while (!tipoValido);
-                    System.out.println("Insersci il titolo");
-                    String title = scanner.nextLine();
-                    System.out.println("Inserisci il prezzo");
-                    double price = Double.parseDouble(scanner.nextLine());
+                    //
+                    String title = null;
+                    do {
+                        try {
+                            System.out.println("Insersci il titolo");
+                            title = scanner.nextLine();
+                            if (title.isEmpty()) {
+                                title = null;
+                                throw new NameException("Il titolo non puo essere vuoto !");
+                            }
+                        } catch (NameException e) {
+                            System.err.println(e.getMessage());
+                        }
+                    } while (title == null);
+                    //
+                    double price = 0;
+                    boolean prezzoValido = false;
+                    do {
+                        try {
+                            System.out.println("Inserisci il prezzo");
+                            price = Double.parseDouble(scanner.nextLine());
+                            if (price < 0) throw new IllegalArgumentException("Il prezzo non puo essere minore di 0");
+                            prezzoValido = true;
+                        } catch (NumberFormatException e) {
+                            System.err.println(e.getMessage());
+                        } catch (IllegalArgumentException e) {
+                            System.err.println(e.getMessage());
+                        }
+                    } while (!prezzoValido);
+                    // SWITCH PER SEPARARE VIDEOGIOCHI DA GIOCHI DA TAVOLO
                     switch (tipo) {
                         case 1 -> {
-                            System.out.println("Insersci la piattaforma (PS4 , PS5 , XBOX_ONE , XBOX_SERIE_X , PC)");
-                            Piattaforme piattaforma = Piattaforme.valueOf(scanner.nextLine());
-                            System.out.println("Inserisci la durata del gioco in ore");
-                            int durata = Integer.parseInt(scanner.nextLine());
-                            System.out.println("Insersci il genere (guerra , azione , sport , strategia , combattimento , crime)");
-                            Generi genere = Generi.valueOf(scanner.nextLine());
+                            //
+                            Piattaforme piattaforma = null;
+                            boolean piattaformaValida = false;
+                            do {
+                                try {
+                                    System.out.println("Insersci la piattaforma (PS4 , PS5 , XBOX_ONE , XBOX_SERIE_X , PC)");
+                                    piattaforma = Piattaforme.valueOf(scanner.nextLine().toUpperCase());
+                                    piattaformaValida = true;
+                                } catch (IllegalArgumentException e) {
+                                    System.err.println(e.getMessage());
+                                }
+                            } while (!piattaformaValida);
+                            //
+                            int durata = 0;
+                            boolean durataValida = false;
+                            do {
+                                try {
+                                    System.out.println("Inserisci la durata del gioco in ore");
+                                    durata = Integer.parseInt(scanner.nextLine());
+                                    if (durata <= 0) throw new NumberFormatException("Valore non valido");
+                                    durataValida = true;
+                                } catch (NumberFormatException e) {
+                                    System.err.println(e.getMessage());
+                                }
+                            } while (!durataValida);
+                            //
+                            Generi genere = null;
+                            boolean genereValido = false;
+                            do {
+                                try {
+                                    System.out.println("Insersci il genere (guerra , azione , sport , strategia , combattimento , crime)");
+                                    genere = Generi.valueOf(scanner.nextLine());
+                                    genereValido = true;
+                                } catch (IllegalArgumentException e) {
+                                    System.err.println(e.getMessage());
+                                }
+                            } while (!genereValido);
+
                             Videogioco newVideoGame = new Videogioco(title, price, piattaforma, durata, genere);
                             listaGiochi.addToCollection(newVideoGame);
                             System.out.println("Gioco aggiunto");
                         }
                         case 2 -> {
-                            System.out.println("Inserisci il numero massimo di giocatori da 2  a 10");
-                            int numGiocatori = Integer.parseInt(scanner.nextLine());
-                            System.out.println("Insersci la durata media in minuti ");
-                            int minutiDurata = Integer.parseInt(scanner.nextLine());
+                            int numGiocatori = 0;
+                            boolean numGiocatoriValido = false;
+                            do {
+                                try {
+                                    System.out.println("Inserisci il numero massimo di giocatori da 2  a 10");
+                                    numGiocatori = Integer.parseInt(scanner.nextLine());
+                                    numGiocatoriValido = true;
+                                } catch (NumberFormatException e) {
+                                    System.err.println(e.getMessage());
+                                }
+                            } while (!numGiocatoriValido);
+                            //
+                            int minutiDurata = 0;
+                            boolean minutiDurataValida = false;
+                            do {
+                                try {
+                                    System.out.println("Insersci la durata media in minuti ");
+                                    minutiDurata = Integer.parseInt(scanner.nextLine());
+                                    minutiDurataValida = true;
+                                } catch (NumberFormatException e) {
+                                    System.err.println(e.getMessage());
+                                }
+                            } while (!minutiDurataValida);
+
                             GiocoDaTavola newGame = new GiocoDaTavola(title, price, numGiocatori, minutiDurata);
                             listaGiochi.addToCollection(newGame);
                             System.out.println("Gioco aggiunto");
@@ -156,9 +227,9 @@ public class Main {
                 case 5 -> {
                     System.out.println("Inserisci il codice id del gioco che vuoi rimuovere");
                     long id = Long.parseLong(scanner.nextLine());
-                    Gioco giocoRimosso = listaGiochi.cercaPerId(id); // ✅ prima cerca
+                    Gioco giocoRimosso = listaGiochi.cercaPerId(id);
                     if (giocoRimosso != null) {
-                        listaGiochi.removeWithGameId(id);             // poi rimuovi
+                        listaGiochi.removeWithGameId(id);
                         System.out.println("Gioco " + giocoRimosso.getTitle() + " rimosso");
                     } else {
                         System.out.println("Nessun gioco con questo id!");
