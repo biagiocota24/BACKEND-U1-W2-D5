@@ -66,10 +66,9 @@ public class Collection {
 
     public void customGame(long gameId) {
         Scanner scanner = new Scanner(System.in);
-
         Gioco gameToCustom = cercaPerId(gameId);
+        //
         if (gameToCustom != null) {
-
             String nuovoTitolo;
             do {
                 System.out.println("Imposta il nuovo nome ");
@@ -77,8 +76,7 @@ public class Collection {
                 if (nuovoTitolo.isEmpty()) System.err.println("Il titolo non puo essere vuoto !");
             } while (nuovoTitolo.isEmpty());
             gameToCustom.setTitle(nuovoTitolo);
-
-
+            //
             boolean prezzoValido = false;
             double nuovoPrezzo = 0;
             do {
